@@ -1,0 +1,136 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Company {
+  id                String            @id @default(cuid())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  placeId           String            @unique
+  name              String
+  googleMapsUrl     String?
+  website           String?
+  phone             String?
+  address           String?
+  city              String?
+  region            String?
+  country           String?
+  postalCode        String?
+  category          String?
+  rating            Float?
+  reviewCount       Int?
+  rawData           Json?
+  firstDiscoveredAt DateTime          @default(now())
+  lastDiscoveredAt  DateTime          @default(now())
+  discoveries       DiscoveryResult[]
+
+  @@index([country])
+  @@index([region])
+  @@index([city])
+  @@index([category])
+}
+
+model DiscoveryRun {
+  id           String             @id @default(cuid())
+  createdAt    DateTime           @default(now())
+  query        String
+  keyword      String?
+  category     String?
+  city         String?
+  region       String?
+  country      String?
+  resultsFound Int                @default(0)
+  newCompanies Int                @default(0)
+  duplicates   Int                @default(0)
+  status       DiscoveryRunStatus @default(RUNNING)
+  completedAt  DateTime?
+  discoveries  DiscoveryResult[]
+}
+
+model DiscoveryResult {
+  id        String       @id @default(cuid())
+  runId     String
+  companyId String
+  createdAt DateTime     @default(now())
+  company   Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  run       DiscoveryRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, companyId])
+  @@index([runId])
+  @@index([companyId])
+}
+
+enum DiscoveryRunStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
