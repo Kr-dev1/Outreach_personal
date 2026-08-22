@@ -14,7 +14,7 @@ const submitForm = async (email: string, password: string) => {
         headers: await headers(),
     })
     if (data.user) {
-        redirect("/dashboard")
+        redirect("/overview")
     }
 }
 
