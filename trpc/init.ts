@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
     const session = await auth.api.getSession({
-        headers: await headers()
+        headers: opts.headers,
     })
     return { userId: 'user_123', session };
 };

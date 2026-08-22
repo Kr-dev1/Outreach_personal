@@ -10,7 +10,6 @@ import { authClient } from "@/lib/auth/auth-client"
 export function Navbar() {
   const session = authClient.useSession().data?.user
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  console.log(session);
 
   return (
     <nav className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur-lg">

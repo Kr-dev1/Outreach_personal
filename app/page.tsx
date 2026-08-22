@@ -240,7 +240,7 @@ export default function Home() {
                   <div className="h-2.5 w-2.5 rounded-full bg-zinc-300" />
                 </div>
                 <div className="ml-3 flex-1">
-                  <div className="w-full max-w-[220px] rounded-md bg-zinc-100 px-3 py-1 text-xs text-zinc-400">
+                  <div className="w-full max-w-55 rounded-md bg-zinc-100 px-3 py-1 text-xs text-zinc-400">
                     leadforge.app/dashboard
                   </div>
                 </div>

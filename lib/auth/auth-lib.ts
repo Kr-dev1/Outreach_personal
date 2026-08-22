@@ -11,7 +11,6 @@ export const getSession = async () => {
 
 export const requireAuth = async () => {
     const session = await getSession();
-
     if (!session) {
         redirect("/signin");
     }
@@ -21,10 +20,7 @@ export const requireAuth = async () => {
 
 
 export const requireUnAuth = async () => {
-    console.log('used unauth');
-
     const session = await getSession();
-    console.log(session);
     if (session) {
         redirect("/dashboard");
     }
